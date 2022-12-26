@@ -24,7 +24,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('tasks.create');
+        //
     }
 
     /**
@@ -58,7 +58,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('tasks.edit', ['task' => $task]);
+        //
     }
 
     /**
@@ -73,6 +73,11 @@ class TaskController extends Controller
         $task->update($request->all());
         return to_route('tasks.index');
     }
+    public function done_tasks()
+    {
+        return view('tasks.done', ['tasks' => Task::all()->where('is_done', '=', 1)]);
+        // return 'hi';
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -82,7 +87,6 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        $task->delete();
-        return to_route('tasks.index');
+        //
     }
 }

@@ -21,4 +21,3 @@ Route::get('/', function () {
 
 Auth::routes();
 Route::resource('tasks', TaskController::class);
-Route::get('done_tasks', [TaskController::class, 'done_tasks'])->name('done_tasks');

@@ -14,7 +14,10 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('tasks.index', ['tasks' => Task::all()]);
+        // return view('tasks.index', ['tasks' => Task::all()->where('is_done', '=', '1'), 'undone_tasks' => Task::all()->where('is_done', '=', '0')]);
+        return view('tasks.index')
+            ->with('tasks', Task::all()->where('is_done', '=', '1'))
+            ->with('undone_tasks', Task::all()->where('is_done', '=', '0'));
     }
 
     /**
@@ -70,13 +73,13 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $task->update($request->all());
+        if ($task->is_done == 0) {
+            $task->update(['is_done' => 1]);
+        } else if ($task->is_done == 1) {
+            $task->update(['is_done' => 0]);
+        }
         return to_route('tasks.index');
-    }
-    public function done_tasks()
-    {
-        return view('tasks.done', ['tasks' => Task::all()->where('is_done', '=', 1)]);
-        // return 'hi';
+        // dd($task);
     }
 
     /**

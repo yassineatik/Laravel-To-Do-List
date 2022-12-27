@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('is_done')->default(0);
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->date('due_date');
             $table->timestamps();
         });

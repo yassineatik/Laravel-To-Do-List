@@ -1,8 +1,10 @@
 <?php
 
-use App\Http\Controllers\TaskController;
+use App\Mail\HelloMail;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +19,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+    // Mail::to('atikyassine4@gmail.com')
+    //     ->send(new HelloMail());
 });
 
 Auth::routes();
-Route::resource('tasks', TaskController::class);
+Route::get('/home', [TaskController::class, 'index']);
+Route::resource('tasks', TaskController::class)->middleware('auth');

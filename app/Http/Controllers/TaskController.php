@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -16,8 +17,8 @@ class TaskController extends Controller
     {
         // return view('tasks.index', ['tasks' => Task::all()->where('is_done', '=', '1'), 'undone_tasks' => Task::all()->where('is_done', '=', '0')]);
         return view('tasks.index')
-            ->with('tasks', Task::all()->where('is_done', '=', '1'))
-            ->with('undone_tasks', Task::all()->where('is_done', '=', '0'));
+            ->with('tasks', Task::all()->where('is_done', '=', '1')->where('user_id', '=', Auth::user()->id))
+            ->with('undone_tasks', Task::all()->where('is_done', '=', '0')->where('user_id', '=', Auth::user()->id));
     }
 
     /**
@@ -38,8 +39,12 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|min:2',
+            'due_date' => 'required',
+        ]);
         Task::create($request->all());
-        return to_route('tasks.index');
+        return redirect('/tasks')->with('status', 'task created successfully');
     }
 
     /**
@@ -75,10 +80,11 @@ class TaskController extends Controller
     {
         if ($task->is_done == 0) {
             $task->update(['is_done' => 1]);
+            return to_route('tasks.index')->with('status', 'Task Done Successfully');
         } else if ($task->is_done == 1) {
             $task->update(['is_done' => 0]);
+            return to_route('tasks.index')->with('status', 'Task UnDone');
         }
-        return to_route('tasks.index');
         // dd($task);
     }
 
@@ -90,6 +96,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect('/tasks')->with('status', 'Task Deleted Successfully');
     }
 }

@@ -2,12 +2,38 @@
 @section('content')
     <div class="container">
         <center>
-            <h2>Manage Your Tasks 💼</h2>
+            <h2 class="wheat">Manage Your Tasks 💼</h2>
         </center>
         <hr>
+        <div class="stats">
+            <div class="Total_Tasks card bg-secondary">
+                <h3>{{ $total_tasks }}</h3>
+                <p>Total<br> Tasks</p>
+            </div>
+            <div class="Finished_Tasks card bg-success">
+                <h3>{{ $tasks->count() }}</h3>
+                <p>Finished <br> Tasks</p>
+            </div>
+
+            <div class="Unfinished_Tasks card">
+                <h3>{{ $undone_tasks->count() }}</h3>
+                <p>Remaining <br> Tasks</p>
+            </div>
+            <div class="pgorgress card bg-primary">
+                @if ($total_tasks > 0)
+                    <h3>{{ ($tasks->count() / $total_tasks) * 100 }}%</h3>
+                @else
+                    <h3>0%</h3>
+                @endif
+
+                {{-- <h3>{{ $total_tasks }}</h3> --}}
+                <p>Progress</p>
+            </div>
+        </div>
         @if (session('status'))
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
                 {{ session('status') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
         <div class="tables">
@@ -85,7 +111,7 @@
                 <div class="finished">
 
                     <H3>Finished Tasks ✅ :</H3>
-                    <table class="table-success table">
+                    <table class="table-primary table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -107,7 +133,7 @@
                                             @csrf
                                             @method('PUT')
                                             <input type="hidden" name="is_done" value="0">
-                                            <input type="submit" value="Undone" class="btn btn-primary">
+                                            <input type="submit" value="Undone" class="btn btn-secondary">
                                         </form>
                                     </td>
                                     <td>
@@ -131,19 +157,24 @@
 
 <style>
     body {
-        padding: 0;
-        margin: 0;
+        /* padding: 0; */
+        /* margin: 0; */
     }
+
+
 
     .tables {
         display: flex;
         justify-content: center;
-        gap: 100px;
+        gap: 30px;
         height: 100hv;
+        width: 100%;
+        padding: 0;
     }
 
     .tasks {
         margin-top: 40px;
+
     }
 
     .table th,
@@ -158,14 +189,47 @@
         color: red;
     }
 
-    h2 {
+    .wheat {
         background-color: wheat;
     }
 
-    /* @if ($tasks->count() == 0 && $undone_tasks->count() == 0)
-.addTasks {
-        width: 60%;
-        margin: auto;
+    .stats {
+        display: flex;
+        justify-content: center;
+        gap: 100px;
+        height: 140px;
+        margin-bottom: 50px;
     }
-@endif */
+
+    .card {
+        width: 140px;
+        height: 140px;
+        background-color: red !important;
+        display: flex;
+        justify-content: center;
+        border-radius: 30px;
+    }
+
+    .card h3,
+    .card p {
+        text-align: center;
+        color: white;
+        font-weight: 600;
+        letter-spacing: 0.19rem
+    }
+
+    .card h3 {
+        margin-top: 10px;
+    }
+
+    .box {
+        position: relative;
+        width: 300px;
+        height: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+
+    }
 </style>

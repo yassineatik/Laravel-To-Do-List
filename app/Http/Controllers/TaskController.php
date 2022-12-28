@@ -17,6 +17,7 @@ class TaskController extends Controller
     {
         // return view('tasks.index', ['tasks' => Task::all()->where('is_done', '=', '1'), 'undone_tasks' => Task::all()->where('is_done', '=', '0')]);
         return view('tasks.index')
+            ->with('total_tasks', Task::where('user_id', '=', Auth::user()->id)->count())
             ->with('tasks', Task::all()->where('is_done', '=', '1')->where('user_id', '=', Auth::user()->id))
             ->with('undone_tasks', Task::all()->where('is_done', '=', '0')->where('user_id', '=', Auth::user()->id));
     }
